@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.noarg") version "1.9.21"
 }
 
 group = "onim.test"
@@ -20,4 +21,8 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(17)
+}
+
+noArg {
+    annotation("onim.test.annotation.NoArg")
 }
