@@ -1,5 +1,5 @@
 package onim.test
 
 interface RabbitMQReceiver {
-    fun receiveMessage(message: String)
+    fun defaultHandler(message: Any)
 }

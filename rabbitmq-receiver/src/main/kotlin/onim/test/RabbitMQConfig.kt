@@ -3,8 +3,10 @@ package onim.test
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
+import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,7 +26,10 @@ class RabbitMQConfig(
 
     @Bean
     fun messageListenerAdapter(rabbitMQReceiver: RabbitMQReceiver): MessageListenerAdapter {
-        return MessageListenerAdapter(rabbitMQReceiver, "receiveMessage")
+        return MessageListenerAdapter(rabbitMQReceiver).apply {
+            setDefaultListenerMethod("defaultHandler")
+            setMessageConverter(Jackson2JsonMessageConverter())
+        }
     }
 
     @Bean
@@ -43,5 +48,13 @@ class RabbitMQConfig(
         container.setQueueNames(queueName)
         container.messageListener = listenerAdapter
         return container
+    }
+
+    @Bean
+    fun rabbitTemplate(): RabbitTemplate {
+        return RabbitTemplate().apply {
+            connectionFactory = connectionFactory()
+            messageConverter = Jackson2JsonMessageConverter()
+        }
     }
 }
