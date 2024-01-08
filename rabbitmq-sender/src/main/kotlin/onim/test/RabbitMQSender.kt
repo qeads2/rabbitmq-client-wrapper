@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 class RabbitMQSender(
     private val rabbitTemplate: RabbitTemplate,
 ) {
-    fun sendMessage(queueName: String, message: String) {
+    fun sendMessage(queueName: String, message: Any) {
         println("Sending message <$message>")
         rabbitTemplate.convertAndSend(queueName, message)
     }

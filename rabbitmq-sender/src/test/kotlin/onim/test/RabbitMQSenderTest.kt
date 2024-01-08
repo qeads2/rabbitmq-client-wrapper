@@ -1,5 +1,6 @@
 package onim.test
 
+import onim.test.notification.UserJoined
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -10,9 +11,21 @@ class RabbitMQSenderTest @Autowired constructor (
 ){
 
     @Test
-    fun test() {
+    fun testDefaultHandler() {
         sender.sendMessage("test-queue", "Hello World!")
         sender.sendMessage("test-queue", "Hello World!")
         sender.sendMessage("test-queue1", "Hello World!")
+    }
+
+    @Test
+    fun testUserJoined() {
+//        (1..5).forEach {
+            sender.sendMessage("test-queue", UserJoined(
+                id = 1,
+                email = "name-1",
+                duplicated = false,
+            )
+            )
+//        }
     }
 }
